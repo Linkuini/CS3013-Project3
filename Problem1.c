@@ -7,6 +7,7 @@
 #define TS 0
 #define S 1
 #define U 2
+#define NUM_THREADS     20
 
 //random time generator for usleep
 /*float randTime(){
@@ -15,8 +16,8 @@
 	float minTime = .25;
 	float diff = 1.75;
 	return rand();
-}*/
-	
+ }*/
+
 //create a queue linked list of different jobs
 struct Node{
 	int Thread;
@@ -27,12 +28,12 @@ void dQueue(){
 	struct Node *temp, *var=front;
 	if(var==front)
 	{
-	//put in cluster
-	front = front->next;
-	free(var);
-}
-else
-printf("\n Queue Empty");
+		//put in cluster
+		front = front->next;
+		free(var);
+	}
+	else
+		printf("\n Queue Empty");
 }
 
 void push(int value)
@@ -55,36 +56,61 @@ void push(int value)
 /*void display(){
 	struct Node *var = rear;
 	if(var != NULL){
-		printf("\nElements are as: ");
-		while(var != NULL){
-			printf("\t%d", var-> Thread);
-			var = var->next;
-		}
-		printf("\n");
+ printf("\nElements are as: ");
+ while(var != NULL){
+ printf("\t%d", var-> Thread);
+ var = var->next;
+ }
+ printf("\n");
 	}
 	else
-		printf("\nQueue is EMpty");
-}*/
+ printf("\nQueue is EMpty");
+ }*/
+
+void *PrintHello(void *threadid)
+{
+	long tid;
+	tid = (long)threadid;
+	printf("Hello World! It's me, thread #%ld!\n", tid);
+	pthread_exit(NULL);
+}
 
 int main(){
-
-//Create queues for each type of job	
-struct Node *tsq;  //top secret 
-struct Node *sq;  //secret 
-struct Node *uq;  //unclassified 
-
+	
+	//Create queues for each type of job
+	struct Node *tsq;  //top secret
+	struct Node *sq;  //secret
+	struct Node *uq;  //unclassified
+	
+	//Test pthread creation and termination
+	pthread_t threads[NUM_THREADS];
+	int rc;
+	long t;
+	for(t=0; t<NUM_THREADS; t++){
+		printf("In main: creating thread %ld\n", t);
+		rc = pthread_create(&threads[t], NULL, PrintHello, (void *)t);
+		if (rc){
+			printf("ERROR; return code from pthread_create() is %d\n", rc);
+			exit(-1);
+		}
+	}
+	
+	/* Last thing that main() should do */
+	pthread_exit(NULL);
+	
 }
+
 //create top secret threads
 /*int totalThreads = 6;
-pthread_t threads[totalThreads];
-int rc;
-long t;
-createThreads(int ID,int type, int cluster){
+ pthread_t threads[totalThreads];
+ int rc;
+ long t;
+ createThreads(int ID,int type, int cluster){
 	for(t=0; t < totalThreads; t++){
-		pthread_t thread[t] = pthread_create(Node.jobID = ID, Node.jobType = type, Node.cluster = cluster);
-		t++;
+ pthread_t thread[t] = pthread_create(Node.jobID = ID, Node.jobType = type, Node.cluster = cluster);
+ t++;
 	}
-*/
+ */
 
 
 //this was used to make the queue from user input to test that pushing and popping worked
@@ -92,45 +118,44 @@ createThreads(int ID,int type, int cluster){
 	rear = NULL;
 	printf(" \n1. Push to Queue");
 	printf(" \n2. Pop from Queue");
-	printf(" \n3. Display Queue");	
+	printf(" \n3. Display Queue");
 	printf(" \n4. Exit\n");
 	while(1)
 	{
-		printf(" \nChoose option: ");
-		scanf("%d", &i);
-		switch(i)
-		{
-			case 1:
-			{
-				int value;
-				printf("\n Enter val to push: ");
-				scanf("%d", &value);
-				push(value);
-				//display();
-				break;
-			}
-			case 2:
-			{
-				dQueue();
-				//display();
-				break;	
-			}
-			case 3:
-			{
-				//display();
-				break;
-			}
-			case 4: 
-			{
-				exit(0);
-			}
-			default:
-			{
-				printf("\n error");
-			}
-		}
+ printf(" \nChoose option: ");
+ scanf("%d", &i);
+ switch(i)
+ {
+ case 1:
+ {
+ int value;
+ printf("\n Enter val to push: ");
+ scanf("%d", &value);
+ push(value);
+ //display();
+ break;
+ }
+ case 2:
+ {
+ dQueue();
+ //display();
+ break;
+ }
+ case 3:
+ {
+ //display();
+ break;
+ }
+ case 4:
+ {
+ exit(0);
+ }
+ default:
+ {
+ printf("\n error");
+ }
+ }
 	}*/
-
 
 
 
