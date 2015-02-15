@@ -25,7 +25,7 @@ sem_t r_cluster;
 
 //create a queue linked list of different jobs
 struct Node{
-	int Thread;
+	pthread_t Thread;
 	struct Node* next;
 }*front, *rear;
 
@@ -41,11 +41,11 @@ void dQueue(){
 		printf("\n Queue Empty");
 }
 
-void push(int value)
+void push(pthread_t thread)
 {
 	struct Node *temp;
 	temp = (struct Node *)malloc(sizeof(struct Node));
-	temp->Thread = value;
+	temp->Thread = thread;
 	if(rear == NULL){
 		rear = temp;
 		rear->next = NULL;
@@ -113,6 +113,7 @@ int main(){
 			printf("ERROR; return code from pthread_create() is %d\n", rc);
 			exit(-1);
 		}
+		push(threads[t]);
 	}
 	
 	/* Last thing that main() should do */
