@@ -3,11 +3,16 @@
 #include <unistd.h>
 #include <time.h>
 #include <pthread.h>
+#include <semaphore.h>
 
 #define TS 0
 #define S 1
 #define U 2
 #define NUM_THREADS     20
+
+// declare semaphores
+sem_t l_cluster;
+sem_t r_cluster;
 
 //random time generator for usleep
 /*float randTime(){
@@ -64,9 +69,10 @@ void push(int value)
  printf("\n");
 	}
 	else
- printf("\nQueue is EMpty");
+ printf("\nQueue is Empty");
  }*/
 
+// Print a message confirming pthread creation
 void *PrintHello(void *threadid)
 {
 	long tid;
@@ -75,12 +81,26 @@ void *PrintHello(void *threadid)
 	pthread_exit(NULL);
 }
 
+// Create an unclassified job that sleeps for a bit before getting back in line.
+void *UnclassifiedJob()
+{
+	// lock semaphore
+	
+	// sleep
+	
+	// unlock semaphore
+}
+
 int main(){
 	
 	//Create queues for each type of job
 	struct Node *tsq;  //top secret
 	struct Node *sq;  //secret
 	struct Node *uq;  //unclassified
+	
+	//initialize semaphore for each cluster
+	sem_init(&l_cluster, 0, 1);
+	sem_init(&r_cluster, 0, 1);
 	
 	//Test pthread creation and termination
 	pthread_t threads[NUM_THREADS];
