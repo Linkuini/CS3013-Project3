@@ -23,6 +23,13 @@ sem_t r_cluster;
 	return rand();
  }*/
 
+//a job consists of a pthread_t and a semaphore
+struct U_Job	// unclassified job
+{
+	pthread_t thread;	// thread id
+	sem_t jobsem;		// semaphore to decide if we can go
+};
+
 //create a queue linked list of different jobs
 struct Node{
 	pthread_t Thread;
